@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>もっち変換ツール</title>
+
+<style>
+body {
+  background: #f5f5f3;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+  padding: 40px;
+}
+	
+.container {
+  max-width: 720px;
+  margin: auto;
+  background: #ffffff;
+  padding: 100px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1 {
+  font-size: 30px;
+  margin: 0;
+  text-align: center;
+  color: #603e88;
+  font-family:
+    "Hiragino Maru Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    "Meiryo",
+    system-ui,
+    sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.04em; /* 少しゆるく */
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+	
+.title-icon {
+  width: 60px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+	
+.description {
+  margin-bottom: 30px;
+  font-size: 14px;
+  color: #7345b5;
+  text-align: center;
+  line-height: 1.6;
+}
+
+textarea {  
+  width: 90%;
+  margin: 0 auto;
+  display: block;
+  min-height: 140px;
+  padding: 20px;
+  font-size: 15px;
+  border-radius: 20px;
+  border: 1px solid #d0c5e1;
+  resize: vertical;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 16px;
+  background: #603e88;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  width: auto;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* ホバー時：少し薄く */
+button:hover {
+  background: #d0c5e1;
+}
+
+/* クリック中：色反転 */
+button:active {
+  background: #fff;
+  color: #603e88;
+  transform: scale(0.98);
+}
+
+.button-area {
+  text-align: center;
+}
+
+.output {
+  width: 90%;
+  margin: 0 auto;
+  display: block;
+  margin-top: 24px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #eae8ef;
+  border-radius: 20px;
+  border: 1px dashed #603e88;
+  white-space: pre-wrap;
+  color: #603e88;
+}
+	
+.deco-area {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-bottom: 20px;
+}
+	
+.deco {
+  width: 180px;
+  height: auto;
+}
+	
+	
+/* ===== スマホUI ===== */
+@media (max-width: 600px) {
+
+  body {
+    padding: 16px;
+  }
+
+  .container {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .title-area {
+    gap: 8px;
+  }
+
+  .title-icon {
+    width: 32px;
+  }
+
+  h1 {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .description {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  textarea {
+    width: 90%;
+    min-height: 160px;
+    font-size: 16px; /* ← iOSでズーム防止 */
+    padding: 16px;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 18px;
+  }
+
+  .output {
+    width: 90%;
+    font-size: 15px;
+    padding: 16px;
+  }
+}
+	
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/build/kuromoji.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="title-area">
+  <img src="もっちっち_icon.jpg" alt="もっち左" class="title-icon">
+
+  <h1>変換しますもっち</h1>
+
+  <img src="もっちっち_icon.jpg" alt="もっち右" class="title-icon">
+</div>
+	
+  <p class="description">
+  文字を入力すると語尾に「もっち」が付くもっち。<br>
+  漢字がたまにひらがなに変わるもっち。<br>
+  でももっちは犬なのでたまに読み方まちがえるもっち。
+  </p>
+	
+  <textarea id="inputText" placeholder="ここに文章を入力"></textarea>
+
+  <div class="button-area">
+    <button id="convertBtn">変換する</button>
+  </div>
+
+  <div class="output" id="outputText"></div>
+	
+  <div class="deco-area"><img src="もっちっち.jpg" alt="もっち" class="deco"></div>
+	
+</div>
+
+<script>
+// ===== 共通ヘルパー =====
+function isOnlySpaces(str) {
+  return /^[\s\n\r]*$/.test(str);
+}
+
+function isOnlySymbolsOrEmoji(str) {
+  return /^[^\p{L}\p{N}]+$/u.test(str);
+}
+
+function toHiragana(katakana) {
+  return katakana.replace(/[\u30a1-\u30f6]/g, c =>
+    String.fromCharCode(c.charCodeAt(0) - 0x60)
+  );
+}
+
+// ===== kuromoji =====
+let tokenizer;
+kuromoji.builder({
+  dicPath: "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/"
+}).build((err, t) => {
+  tokenizer = t;
+});
+
+// ===== ひらがな変換（50〜60%）=====
+function balancedHiraganaConvert(tokens) {
+  const ratio = 0.5 + Math.random() * 0.1;
+  const kanjiTokens = tokens.filter(t => /[一-龠]/.test(t.surface_form));
+  const targetCount = Math.floor(kanjiTokens.length * ratio);
+
+  const shuffled = [...kanjiTokens].sort(() => Math.random() - 0.5);
+  const selected = new Set(shuffled.slice(0, targetCount));
+
+  return tokens.map(t => {
+    if (selected.has(t) && t.reading) {
+      return toHiragana(t.reading);
+    }
+    return t.surface_form;
+  }).join("");
+}
+
+// ===== もっち付与（文末1回限定）=====
+function attachMocchi(str) {
+  if (isOnlySpaces(str)) return str;
+
+  // 改行退避
+  const match = str.match(/(\s*)$/);
+  const trailing = match ? match[1] : "";
+  let core = str.replace(/(\s*)$/, "");
+
+  // すでにもっちがあれば何もしない
+  if (/もっち/.test(core)) {
+    return core + trailing;
+  }
+
+  // 文末の記号・絵文字・句読点（連続OK）
+  const endMatch = core.match(/(.+?)([。！？?!]+|[^\p{L}\p{N}\s]+)$/u);
+  if (endMatch) {
+    return endMatch[1] + "もっち" + endMatch[2] + trailing;
+  }
+
+  // 句読点なし文末
+  return core + "もっち" + trailing;
+}
+
+// ===== 行 → 文 単位で処理 =====
+function processByLine(text) {
+  const lines = text.split("\n");
+
+  return lines.map(line => {
+    if (isOnlySpaces(line)) return line;
+
+    // 記号・絵文字だけの行
+    if (isOnlySymbolsOrEmoji(line.trim())) {
+      return "もっち" + line.trim();
+    }
+
+    // 文単位に分割（改行なし文章対策）
+    const sentences = line.match(/[^。！？?!]+[。！？?!]*/g) || [];
+
+    return sentences.map(sentence => {
+      const tokens = tokenizer.tokenize(sentence);
+      const converted = balancedHiraganaConvert(tokens);
+      return attachMocchi(converted);
+    }).join("");
+  }).join("\n");
+}
+
+// ===== 実行 =====
+document.getElementById("convertBtn").addEventListener("click", () => {
+  if (!tokenizer) return;
+
+  const input = document.getElementById("inputText").value;
+  const result = processByLine(input);
+
+  document.getElementById("outputText").textContent = result;
+});
+</script>
+
+</body>
+</html>
