@@ -369,12 +369,11 @@ document.getElementById("convertBtn").addEventListener("click", () => {
   document.getElementById("outputText").textContent = result;
 });
 	
-window.addEventListener("load", () => {
+	
+document.addEventListener("DOMContentLoaded", () => {
   const loading = document.getElementById("loading");
-  if (loading) {
-    loading.style.display = "none";
-  }
-  // 動作の確認用 }, 3000); // ← 3秒表示させる
+  if (loading) loading.remove();
+  // }, 3000); // ← 3秒表示させる
 });
 	
 </script>
