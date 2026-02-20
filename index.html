@@ -205,14 +205,7 @@ button:active {
   width: 48px;
   height: auto;
   /* animation: mocchi-spin 2s linear infinite; ←回転ver.*/
-  animation: mocchi-bounce 0.8s ease-in-out infinite;
-}
-
-/* テキスト */
-.loading-text {
-  font-size: 14px;
-  color: #666;
-  letter-spacing: 0.08em;
+  animation: mocchi-bounce 0.8s ease-in-out infinite; /* ←バウンスver.*/
 }
 
 /* 回転アニメーション */
@@ -223,12 +216,43 @@ button:active {
   to {
     transform: rotate(360deg);
   } */
-	
+
+/* バウンスアニメーション */
 @keyframes mocchi-bounce {
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
 	
+/* テキスト */
+.loading-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  letter-spacing: 0.15em;
+ }
+
+.loading-text span {
+  display: inline-block;
+  animation: fadeFlow 1.6s infinite;
+  opacity: 1;
+}
+	
+.loading-text span:nth-child(1)  { animation-delay: 0s; }
+.loading-text span:nth-child(2)  { animation-delay: 0.1s; }
+.loading-text span:nth-child(3)  { animation-delay: 0.2s; }
+.loading-text span:nth-child(4)  { animation-delay: 0.3s; }
+.loading-text span:nth-child(5)  { animation-delay: 0.4s; }
+.loading-text span:nth-child(6)  { animation-delay: 0.5s; }
+.loading-text span:nth-child(7)  { animation-delay: 0.6s; }
+.loading-text span:nth-child(8)  { animation-delay: 0.7s; }
+	
+@keyframes fadeFlow {
+  0%   { opacity: 1; }
+  40%  { opacity: 0.3; }
+  80%  { opacity: 1; }
+  100% { opacity: 1; }
+}
 }
 	
 	
@@ -241,7 +265,9 @@ button:active {
 
 <div id="loading">
   <img src="もっちっち.png" alt="もっち読み込み中" class="mocchi-loading">
-  <div class="loading-text">読み込み中もっち</div>
+  <div class="loading-text">
+  <span>読</span><span>み</span><span>込</span><span>み</span><span>中</span><span>も</span><span>っ</span><span>ち</span>
+  </div>
 </div>
 	
 <div class="container">
@@ -373,7 +399,7 @@ document.getElementById("convertBtn").addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const loading = document.getElementById("loading");
   if (loading) loading.remove();
-  // }, 3000); // ← 3秒表示させる
+  // }, 3000); // ← ローディング画面確認用（本来は3秒表示のコード）
 });
 	
 </script>
