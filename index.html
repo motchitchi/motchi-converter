@@ -180,7 +180,57 @@ button:active {
     font-size: 15px;
     padding: 16px;
   }
+	
+.deco {
+  width: 100px;
+  height: auto;
 }
+}
+	
+/* ===== ローディング全体 ===== */
+#loading {
+  position: fixed;
+  inset: 0;
+  background: #f5f5f3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 9999;
+}
+
+/* もっちアイコン */
+.mocchi-loading {
+  width: 48px;
+  height: auto;
+  /* animation: mocchi-spin 2s linear infinite; ←回転ver.*/
+  animation: mocchi-bounce 0.8s ease-in-out infinite;
+}
+
+/* テキスト */
+.loading-text {
+  font-size: 14px;
+  color: #666;
+  letter-spacing: 0.08em;
+}
+
+/* 回転アニメーション */
+/* @keyframes mocchi-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  } */
+	
+@keyframes mocchi-bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+	
+}
+	
 	
 </style>
 
@@ -189,6 +239,11 @@ button:active {
 
 <body>
 
+<div id="loading">
+  <img src="もっちっち.png" alt="もっち読み込み中" class="mocchi-loading">
+  <div class="loading-text">読み込み中もっち</div>
+</div>
+	
 <div class="container">
   <div class="title-area">
   <img src="もっちっち_icon.jpg" alt="もっち左" class="title-icon">
@@ -313,6 +368,15 @@ document.getElementById("convertBtn").addEventListener("click", () => {
 
   document.getElementById("outputText").textContent = result;
 });
+	
+window.addEventListener("load", () => {
+  const loading = document.getElementById("loading");
+  if (loading) {
+    loading.style.display = "none";
+  }
+  // 動作の確認用 }, 3000); // ← 3秒表示させる
+});
+	
 </script>
 
 </body>
