@@ -137,7 +137,10 @@ padding: 30px 16px 16px;
 }
 
 .container {
-padding: 60px 20px 12px;
+padding-top: calc(60px + env(safe-area-inset-top));
+padding-left: 20px;
+padding-right: 20px;
+padding-bottom: 12px;
 border-radius: 20px;
 }
 
