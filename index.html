@@ -12,6 +12,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
   padding: 40px;
 }
+	
 .container {
   max-width: 720px;
   margin: auto;
@@ -20,6 +21,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
+
 h1 {
   font-size: 30px;
   margin: 0;
@@ -33,8 +35,9 @@ h1 {
     system-ui,
     sans-serif;
   font-weight: 900;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.04em; /* 少しゆるく */
 }
+	
 .title-area {
   display: flex;
   align-items: center;
@@ -42,12 +45,14 @@ h1 {
   gap: 12px;
   margin-bottom: 20px;
 }
+	
 .title-icon {
   width: 60px;
   height: auto;
   object-fit: contain;
   flex-shrink: 0;
 }
+	
 .description {
   margin-bottom: 30px;
   font-size: 14px;
@@ -55,6 +60,7 @@ h1 {
   text-align: center;
   line-height: 1.6;
 }
+	
 textarea {
   width: 90%;
   margin: 0 auto;
@@ -66,40 +72,120 @@ textarea {
   border: 1px solid #d0c5e1;
   resize: vertical;
 }
+	
 button {
-  margin-top: 20px;
-  padding: 12px 28px;
-  font-size: 16px;
-  border: none;
-  border-radius: 16px;
-  background: #603e88;
-  color: #fff;
-  cursor: pointer;
+margin-top: 20px;
+padding: 12px 28px;
+font-size: 16px;
+border: none;
+border-radius: 16px;
+background: #603e88;
+color: #fff;
+cursor: pointer;
+white-space: nowrap;
+width: auto;
+transition: background 0.15s ease, color 0.15s ease;
 }
-button:hover { background: #d0c5e1; }
-button:active {
-  background: #fff;
-  color: #603e88;
-  transform: scale(0.98);
-}
-.button-area { text-align: center; }
-.output {
-  width: 90%;
-  margin: 24px auto 20px;
-  padding: 20px;
-  background: #eae8ef;
-  border-radius: 20px;
-  border: 1px dashed #603e88;
-  white-space: pre-wrap;
-  color: #603e88;
-}
-.deco-area {
-  display: flex;
-  justify-content: right;
-  margin-bottom: 20px;
-}
-.deco { width: 180px; }
 
+/* ホバー時：少し薄く */
+button:hover {
+background: #d0c5e1;
+}
+		
+/* クリック中：色反転 */
+button:active {
+background: #fff;
+color: #603e88;
+transform: scale(0.98);
+}
+		
+.button-area {
+text-align: center;
+}
+	
+.output {
+width: 90%;
+margin: 0 auto;
+display: block;
+margin-top: 24px;
+margin-bottom: 20px;
+padding: 20px;
+background: #eae8ef;
+border-radius: 20px;
+border: 1px dashed #603e88;
+white-space: pre-wrap;
+color: #603e88;
+}
+	
+.deco-area {
+display: flex;
+align-items: center;
+justify-content: right;
+margin-bottom: 20px;
+}
+
+.deco {
+width: 180px;
+height: auto;
+}
+
+/* ===== スマホUI ===== */
+@media (max-width: 600px) {
+
+body {
+padding: 16px;
+}
+
+.container {
+padding: 20px;
+border-radius: 20px;
+}
+
+.title-area {
+gap: 8px;
+}
+
+.title-icon {
+width: 32px;
+}
+
+h1 {
+font-size: 20px;
+line-height: 1.4;
+}
+
+.description {
+font-size: 13px;
+margin-bottom: 20px;
+}
+
+textarea {
+width: 90%;
+min-height: 160px;
+font-size: 16px; /* ← iOSでズーム防止 */
+padding: 16px;
+}
+
+button {
+width: 100%;
+padding: 14px;
+font-size: 16px;
+border-radius: 18px;
+}
+
+.output {
+width: 90%;
+font-size: 15px;
+padding: 16px;
+}
+
+.deco {
+width: 100px;
+height: auto;
+}
+}
+
+/* ===== ローディング全体 ===== */
 #loading {
   position: fixed;
   inset: 0;
@@ -112,22 +198,55 @@ button:active {
   z-index: 9999;
   transition: opacity 0.4s ease;
 }
+
+/* もっちアイコン */
 .mocchi-loading {
-  width: 48px;
-  animation: mocchi-bounce 0.8s ease-in-out infinite;
+width: 48px;
+height: auto;
+/* animation: mocchi-spin 2s linear infinite; ←回転ver.*/
+animation: mocchi-bounce 0.8s ease-in-out infinite; /* ←バウンスver.*/
 }
+
+/* 回転アニメーション */
+/* @keyframes mocchi-spin {
+from {transform: rotate(0deg);}
+to {transform: rotate(360deg);} */
+
+/* バウンスアニメーション */
 @keyframes mocchi-bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+0%,100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
 }
+
+/* テキスト */
+.loading-text {
+margin-top: 12px;
+font-size: 14px;
+color: #666;
+text-align: center;
+letter-spacing: 0.15em;
+}
+	
 .loading-text span {
-  display: inline-block;
-  animation: fadeFlow 1.6s infinite;
+display: inline-block;
+animation: fadeFlow 1.6s infinite;
+opacity: 1;
 }
+	
+.loading-text span:nth-child(1) { animation-delay: 0s; }
+.loading-text span:nth-child(2) { animation-delay: 0.1s; }
+.loading-text span:nth-child(3) { animation-delay: 0.2s; }
+.loading-text span:nth-child(4) { animation-delay: 0.3s; }
+.loading-text span:nth-child(5) { animation-delay: 0.4s; }
+.loading-text span:nth-child(6) { animation-delay: 0.5s; }
+.loading-text span:nth-child(7) { animation-delay: 0.6s; }
+.loading-text span:nth-child(8) { animation-delay: 0.7s; }
+	
 @keyframes fadeFlow {
-  0% { opacity: 1; }
-  40% { opacity: 0.3; }
-  100% { opacity: 1; }
+0% { opacity: 1; }
+40% { opacity: 0.3; }
+80% { opacity: 1; }
+100% { opacity: 1; }
 }
 </style>
 
@@ -165,16 +284,26 @@ button:active {
 </div>
 
 <script>
-// ===== 共通 =====
-function isOnlySpaces(str){return /^[\s\n\r]*$/.test(str);}
-function isOnlySymbolsOrEmoji(str){return /^[^\p{L}\p{N}]+$/u.test(str);}
-function toHiragana(k){return k.replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));}
+// ===== 共通ヘルパー =====
+function isOnlySpaces(str) {
+  return /^[\s\n\r]*$/.test(str);
+}
+
+function isOnlySymbolsOrEmoji(str) {
+  return /^[^\p{L}\p{N}]+$/u.test(str);
+}
+
+function toHiragana(katakana) {
+  return katakana.replace(/[\u30a1-\u30f6]/g, c =>
+    String.fromCharCode(c.charCodeAt(0) - 0x60)
+  );
+}
 
 // ===== kuromoji =====
 let tokenizer = null;
 let tokenizerReady = false;
 
-// ★dict をローカルから読む
+// ★変更：dict をローカルから読む
 kuromoji.builder({
   dicPath: "./kuromoji.js-dict/"
 }).build((err, t) => {
@@ -195,29 +324,67 @@ kuromoji.builder({
   setTimeout(() => loading.remove(), 400);
 });
 
-// ===== 変換処理 =====
-function balancedHiraganaConvert(tokens){
-  const ratio=0.5+Math.random()*0.1;
-  const kanji=tokens.filter(t=>/[一-龠]/.test(t.surface_form));
-  const count=Math.floor(kanji.length*ratio);
-  const pick=new Set([...kanji].sort(()=>Math.random()-0.5).slice(0,count));
-  return tokens.map(t=>pick.has(t)&&t.reading?toHiragana(t.reading):t.surface_form).join("");
+// ===== ひらがな変換（50〜60%）=====
+function balancedHiraganaConvert(tokens) {
+  const ratio = 0.5 + Math.random() * 0.1;
+  const kanjiTokens = tokens.filter(t => /[一-龠]/.test(t.surface_form));
+  const targetCount = Math.floor(kanjiTokens.length * ratio);
+
+  const shuffled = [...kanjiTokens].sort(() => Math.random() - 0.5);
+  const selected = new Set(shuffled.slice(0, targetCount));
+
+  return tokens.map(t => {
+    if (selected.has(t) && t.reading) {
+      return toHiragana(t.reading);
+    }
+    return t.surface_form;
+  }).join("");
 }
-function attachMocchi(str){
-  if(isOnlySpaces(str))return str;
-  const m=str.match(/(\s*)$/);const t=m?m[1]:"";
-  let c=str.replace(/(\s*)$/,"");
-  if(/もっち/.test(c))return c+t;
-  const e=c.match(/(.+?)([。！？?!]+|[^\p{L}\p{N}\s]+)$/u);
-  return e?e[1]+"もっち"+e[2]+t:c+"もっち"+t;
+
+// ===== もっち付与（文末1回限定）=====
+function attachMocchi(str) {
+  if (isOnlySpaces(str)) return str;
+
+  // 改行・空白退避
+  const match = str.match(/(\s*)$/);
+  const trailing = match ? match[1] : "";
+  let core = str.replace(/(\s*)$/, "");
+
+  // ★ 文末に「もっち」が既にある場合のみスキップ
+  if (/もっち([。！？?!]|$)/u.test(core)) {
+    return core + trailing;
+  }
+
+  // 文末の記号・句読点（連続OK）
+  const endMatch = core.match(/(.+?)([。！？?!]+)$/u);
+  if (endMatch) {
+    return endMatch[1] + "もっち" + endMatch[2] + trailing;
+  }
+
+  // 句読点なし文末
+  return core + "もっち" + trailing;
 }
-function processByLine(text){
-  return text.split("\n").map(l=>{
-    if(isOnlySpaces(l))return l;
-    if(isOnlySymbolsOrEmoji(l.trim()))return"もっち"+l.trim();
-    return (l.match(/[^。！？?!]+[。！？?!]*/g)||[])
-      .map(s=>attachMocchi(balancedHiraganaConvert(tokenizer.tokenize(s))))
-      .join("");
+
+// ===== 行 → 文 単位で処理 =====
+function processByLine(text) {
+  const lines = text.split("\n");
+
+  return lines.map(line => {
+    if (isOnlySpaces(line)) return line;
+
+    // 記号・絵文字だけの行
+    if (isOnlySymbolsOrEmoji(line.trim())) {
+      return "もっち" + line.trim();
+    }
+
+    // 文単位に分割（改行なし文章対策）
+    const sentences = line.match(/[^。！？?!]+[。！？?!]*/g) || [];
+
+    return sentences.map(sentence => {
+      const tokens = tokenizer.tokenize(sentence);
+      const converted = balancedHiraganaConvert(tokens);
+      return attachMocchi(converted);
+    }).join("");
   }).join("\n");
 }
 
@@ -225,7 +392,7 @@ document.getElementById("convertBtn").addEventListener("click",()=>{
   if(!tokenizerReady)return;
   document.getElementById("outputText").textContent =
     processByLine(document.getElementById("inputText").value);
-	// }, 3000); // ← ローディング画面確認用（本来は3秒表示のコード）
+  // }, 3000); // ← ローディング画面確認用（本来は3秒表示のコード）
 });
 </script>
 
