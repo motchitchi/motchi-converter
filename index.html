@@ -199,6 +199,7 @@ button:active {
   gap: 12px;
   z-index: 9999;
   transition: opacity 0.4s ease;
+  pointer-events: none;
 }
 
 /* もっちアイコン */
@@ -394,20 +395,18 @@ document.getElementById("convertBtn").addEventListener("click", () => {
   document.getElementById("outputText").textContent = result;
 });
 	
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   const loading = document.getElementById("loading");
-  if (loading) {
-    loading.style.opacity = "0";
-    loading.style.pointerEvents = "none";
+  if (!loading) return;
 
-    // フェードアウト後に完全削除
-    setTimeout(() => {
-      loading.remove();
-    }, 400);
-	
-	// }, 3000); // ← ローディング画面確認用（本来は3秒表示のコード）
-  }
-};
+  loading.style.opacity = "0";
+  loading.style.pointerEvents = "none";
+
+  setTimeout(() => {
+    loading.remove();
+  }, 400);
+　// }, 3000); // ← ローディング画面確認用（本来は3秒表示のコード）
+});
 </script>
 
 </body>
